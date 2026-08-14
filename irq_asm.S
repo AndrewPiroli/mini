@@ -11,10 +11,16 @@ Copyright (C) 2008, 2009	Hector Martin "marcan" <marcan@marcansoft.com>
 #include "hollywood.h"
 #include "irq.h"
 
+.arm
+
 .globl v_irq
+.type v_irq, %function
 .globl irq_setup_stack
+.type irq_setup_stack, %function
 .globl irq_kill
+.type irq_kill, %function
 .globl irq_restore
+.type irq_restore, %function
 .extern __irqstack_addr
 .extern irq_handler
 
@@ -29,6 +35,7 @@ irq_setup_stack:
 	@ Restore mode
 	msr cpsr_c, r0
 	bx	lr
+.size irq_setup_stack, . - irq_setup_stack
 
 v_irq:
 	push	{r0-r3, r9, r12, lr}
@@ -37,6 +44,7 @@ v_irq:
 
 	pop		{r0-r3, r9, r12, lr}
 	subs	pc, lr, #4
+.size v_irq, . - v_irq
 
 irq_kill:
 	mrs		r1, cpsr
@@ -44,6 +52,7 @@ irq_kill:
 	orr		r1, r1, #(CPSR_IRQDIS|CPSR_FIQDIS)
 	msr		cpsr_c, r1
 	bx		lr
+.size irq_kill, . - irq_kill
 
 irq_restore:
 	mrs		r1, cpsr
@@ -51,4 +60,5 @@ irq_restore:
 	orr		r1, r1, r0
 	msr		cpsr_c, r1
 	bx		lr
+.size irq_restore, . - irq_restore
 
