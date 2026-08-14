@@ -1,12 +1,13 @@
-ifeq ($(strip $(WIIDEV)),)
-$(error "Set WIIDEV in your environment.")
+ifeq ($(strip $(DEVKITARM)),)
+$(error "Set DEVKITARM in your environment.")
 endif
 
-PREFIX = $(WIIDEV)/bin/armeb-eabi-
+PREFIX = $(DEVKITARM)/bin/arm-none-eabi-
 
-CFLAGS = -mbig-endian -mcpu=arm926ej-s
+CFLAGS = -mbig-endian -mcpu=arm926ej-s -mthumb-interwork -fno-builtin -ffreestanding
 CFLAGS += -fomit-frame-pointer -ffunction-sections
-CFLAGS += -Wall -Wextra -Os -pipe
+# ugh
+CFLAGS += -Wall -Wextra -Os -pipe -I . -isystem . -std=gnu90
 ASFLAGS =
 LDFLAGS = -mbig-endian -n -nostartfiles -nodefaultlibs -Wl,-gc-sections
 
